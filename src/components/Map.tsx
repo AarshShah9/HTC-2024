@@ -1,9 +1,8 @@
 "use client";
 
-import { GeoJsonObject } from "leaflet";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 
-export default function Map({ geoJson }: { geoJson: GeoJsonObject }) {
+export default function Map({ geoJson }: { geoJson: GeoJSON.GeoJSON }) {
   return (
     <MapContainer
       center={[0, 0]}
