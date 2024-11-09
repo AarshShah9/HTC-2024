@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -10,11 +11,14 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
+    "@prisma/client": "^5.22.0",
     "leaflet": "^1.9.4",
     "next": "15.0.3",
+    "prisma": "^5.22.0",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
-    "react-leaflet": "^5.0.0-rc.1"
+    "react-leaflet": "^5.0.0-rc.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.14",
