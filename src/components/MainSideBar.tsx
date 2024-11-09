@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { useState } from "react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 // import { XMarkIcon } from '@heroicons/react/24/outline'
 
 export default function MainSideBar() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(true);
 
   return (
     <Dialog open={open} onClose={() => {}} className="relative z-10">
@@ -20,7 +20,9 @@ export default function MainSideBar() {
               <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                 <div className="px-4 sm:px-6">
                   <div className="flex items-start justify-between">
-                    <DialogTitle className="text-base font-semibold text-gray-900">Panel title</DialogTitle>
+                    <DialogTitle className="text-base font-semibold text-gray-900">
+                      Panel title
+                    </DialogTitle>
                     <div className="ml-3 flex h-7 items-center">
                       <button
                         type="button"
@@ -34,12 +36,14 @@ export default function MainSideBar() {
                     </div>
                   </div>
                 </div>
-                <div className="relative mt-6 flex-1 px-4 sm:px-6">{/* Your content */}</div>
+                <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                  {/* Your content */}
+                </div>
               </div>
             </DialogPanel>
           </div>
         </div>
       </div>
     </Dialog>
-  )
+  );
 }
