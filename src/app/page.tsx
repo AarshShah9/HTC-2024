@@ -1,8 +1,22 @@
 "use client";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Polygon, TileLayer } from "react-leaflet";
 import MainSideBar from "@/components/MainSideBar";
 
+import { getCountryPolygon } from "@/server/countries";
+import { useEffect, useState } from "react";
+
 export default function Home() {
+  const [poly, setPoly] = useState([]);
+  useEffect(() => {
+    (async () => {
+      const polygonCoordinates = await getCountryPolygon("Canada");
+      if (!polygonCoordinates) {
+        return;
+      }
+      setPoly(L.GeoJSON.coordsToLatLngs(polygonCoordinates, 2));
+    })();
+  }, []);
+
   return (
     <main>
       <MainSideBar />
@@ -17,6 +31,7 @@ export default function Home() {
         ]}
         maxBoundsViscosity={1.0} // Smoothly restricts panning at the edges
       >
+        <Polygon pathOptions={{ color: "purple" }} positions={poly} />
         <TileLayer
           url={
             "https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}"
