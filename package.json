@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.1.5",
     "leaflet": "^1.9.4",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
