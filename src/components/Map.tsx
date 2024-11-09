@@ -1,6 +1,9 @@
-import { MapContainer, TileLayer, Polygon } from "react-leaflet";
+"use client";
 
-export default function Map({ poly }) {
+import { GeoJsonObject } from "leaflet";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+
+export default function Map({ geoJson }: { geoJson: GeoJsonObject }) {
   return (
     <MapContainer
       center={[0, 0]}
@@ -13,7 +16,7 @@ export default function Map({ poly }) {
       ]}
       maxBoundsViscosity={1.0} // Smoothly restricts panning at the edges
     >
-      <Polygon pathOptions={{ color: "purple" }} positions={poly} />
+      <GeoJSON data={geoJson} />
       <TileLayer
         url="https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}"
         accessToken="WYUholf8Kd9VFs67vN1lrIKrzlTv0KTcdtwi0KWfubYj6XCRgnXUKOaDZ6cwq9uB"
