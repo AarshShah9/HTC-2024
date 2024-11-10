@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
 import { Input } from "@headlessui/react";
 import { mapObject } from "@/server/client";
@@ -21,6 +22,20 @@ type MainSideBarProps = {
   setSelectedDisaster: (disaster: mapObject | null) => void;
   filter: string;
   setFilter: (filter: string) => void;
+};
+
+const ScrollWatcher = ({ isSelected }: { isSelected: boolean | null }) => {
+  const listItemRef = useRef<null | HTMLDivElement>(null);
+  useEffect(() => {
+    if (isSelected && listItemRef.current) {
+      listItemRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [isSelected]);
+
+  return <span ref={listItemRef}></span>;
 };
 
 export default function MainSideBar({
@@ -71,56 +86,58 @@ export default function MainSideBar({
           </div>
           <div className="p-4">
             {disasterData.map((disaster) => (
-              <div
-                key={disaster.name}
-                onClick={() => setSelectedDisaster(disaster)}
-                className={`mb-4 rounded-xl border-2 ${isSelected(disaster) ? "border-cyan-600" : "border-zinc-400"} bg-gradient-to-tr from-zinc-950 to-zinc-600 p-4 shadow-lg`}
-              >
-                <div className="flex flex-col justify-between">
-                  <h2 className="text-lg font-bold">{disaster.name}</h2>
-                  <p>{isoToEmoji(disaster.countryIso)}</p>
-                  <p>{disaster.disasterType}</p>
-                  {isSelected(disaster) && (
-                    <>
-                      <div className="mt-2">
-                        <h3 className="text-md font-bold">
-                          What&apos;s happening?
-                        </h3>
+              <div key={disaster.name}>
+                <ScrollWatcher isSelected={isSelected(disaster)} />
+                <div
+                  onClick={() => setSelectedDisaster(disaster)}
+                  className={`mb-4 rounded-xl border-2 ${isSelected(disaster) ? "border-cyan-600" : "border-zinc-400"} bg-gradient-to-tr from-zinc-950 to-zinc-600 p-4 shadow-lg`}
+                >
+                  <div className="flex flex-col justify-between">
+                    <h2 className="text-lg font-bold">{disaster.name}</h2>
+                    <p>{isoToEmoji(disaster.countryIso)}</p>
+                    <p>{disaster.disasterType}</p>
+                    {isSelected(disaster) && (
+                      <>
+                        <div className="mt-2">
+                          <h3 className="text-md font-bold">
+                            What&apos;s happening?
+                          </h3>
 
-                        <div className="mt-4 max-h-16 overflow-hidden text-sm/5 text-white/50">
-                          {disaster.summary}
-                        </div>
-
-                        <h3 className="text-md mt-4 font-bold">
-                          Who&apos;s helping?
-                        </h3>
-
-                        {disaster.nonProfits.slice(0, 5).map((np) => (
-                          <div
-                            key={np.name}
-                            className="mb-2 flex flex-row items-center justify-start gap-2"
-                          >
-                            {/* eslint-disable-next-line @next/next/no-img-element*/}
-                            <img
-                              src={np.logoUrl}
-                              alt={np.name}
-                              width={50}
-                              height={50}
-                              className="rounded-xl"
-                            />
-                            <a
-                              href={np.websiteUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-indigo-300 hover:underline"
-                            >
-                              {np.name}
-                            </a>
+                          <div className="mt-4 max-h-16 overflow-hidden text-sm/5 text-white/50">
+                            {disaster.summary}
                           </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
+
+                          <h3 className="text-md mt-4 font-bold">
+                            Who&apos;s helping?
+                          </h3>
+
+                          {disaster.nonProfits.slice(0, 5).map((np) => (
+                            <div
+                              key={np.name}
+                              className="mb-2 flex flex-row items-center justify-start gap-2"
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element*/}
+                              <img
+                                src={np.logoUrl}
+                                alt={np.name}
+                                width={50}
+                                height={50}
+                                className="rounded-xl"
+                              />
+                              <a
+                                href={np.websiteUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-indigo-300 hover:underline"
+                              >
+                                {np.name}
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
