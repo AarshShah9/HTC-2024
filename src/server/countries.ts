@@ -10,8 +10,9 @@ export async function getCountryGeoJson(
 
     const result = await fetch(
       "https://nominatim.openstreetmap.org/search?" +
-      new URLSearchParams(query).toString(),
-      { cache: 'force-cache' });
+        new URLSearchParams(query).toString(),
+      { cache: "force-cache" },
+    );
     const resultJson = await result.json();
     return resultJson;
   } catch (error) {

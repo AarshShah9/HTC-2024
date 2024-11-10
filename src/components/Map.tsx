@@ -1,6 +1,6 @@
 "use client";
 
-import { main, mapObject } from "@/server/client";
+import { main } from "@/server/client";
 import { useQuery } from "@tanstack/react-query";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 

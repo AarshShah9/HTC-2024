@@ -118,7 +118,7 @@ async function getOngoingOrAlertDisasters() {
       method: "POST",
       headers: headers,
       body: JSON.stringify(body),
-      cache: "force-cache"
+      cache: "force-cache",
     });
 
     if (!response.ok) {
@@ -128,17 +128,24 @@ async function getOngoingOrAlertDisasters() {
     const initialData = await response.json();
 
     // Array to hold the detailed data from each disaster's href link
-    const disasterDetails: DisasterResponse[] = await Promise.all(initialData.data.map(async (disaster: DisasterResponse) => {
-      if (disaster.href) {
-        const detailResponse = await fetch(disaster.href, { headers, cache: "force-cache" });
-        if (!detailResponse.ok) {
-          console.warn(`Warning: Failed to fetch details for ${disaster.href}`);
-          return null;
+    const disasterDetails: DisasterResponse[] = await Promise.all(
+      initialData.data.map(async (disaster: DisasterResponse) => {
+        if (disaster.href) {
+          const detailResponse = await fetch(disaster.href, {
+            headers,
+            cache: "force-cache",
+          });
+          if (!detailResponse.ok) {
+            console.warn(
+              `Warning: Failed to fetch details for ${disaster.href}`,
+            );
+            return null;
+          }
+          return detailResponse.json();
         }
-        return detailResponse.json();
-      }
-      return null;
-    }));
+        return null;
+      }),
+    );
 
     // console.log("All Disaster Details:", disasterDetails);
     return disasterDetails.filter((disaster) => disaster !== null);

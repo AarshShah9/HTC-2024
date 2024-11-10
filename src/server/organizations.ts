@@ -38,9 +38,12 @@ export function searchOrganizationsByThemesAndCountry(
   themeIds: string[],
   countryName: string,
 ): Organization[] {
-    // Assuming the JSON structure is as described
-  const organizations: Organization[] =
-    (organizationsData as any).organizations.organization;
+  // Assuming the JSON structure is as described
+  const organizations: Organization[] = (
+    organizationsData as unknown as {
+      organizations: { organization: Organization[] };
+    }
+  ).organizations.organization;
 
   return organizations.filter((org) => {
     // Handle country being an object or array of objects
@@ -66,8 +69,11 @@ export type Theme = {
 
 export function getAllUniqueThemes(): Theme[] {
   // Assuming the JSON structure is as described
-  const organizations: Organization[] =
-    (organizationsData as any).organizations.organization;
+  const organizations: Organization[] = (
+    organizationsData as unknown as {
+      organizations: { organization: Organization[] };
+    }
+  ).organizations.organization;
 
   // Collect unique themes
   const themesMap = new Map<string, string>();

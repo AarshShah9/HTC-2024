@@ -47,16 +47,12 @@ export async function main(): Promise<mapObject[]> {
     themes,
   );
 
-
   // Then for each crises call searchOrganizationsByThemeAndCountry(themeId, countryCode) and add the non-profit organizations that are found as a result to each organization
   for (const { crisis, themeIds } of categorizedCrises) {
     const nonProfits: nonProfit[] = [];
     const countryCode = crisis.data?.[0].fields.country?.[0].iso3 ?? "";
     const countryName = crisis.data?.[0].fields.country?.[0].name ?? "";
-    const orgs = searchOrganizationsByThemesAndCountry(
-      themeIds,
-      countryName,
-    );
+    const orgs = searchOrganizationsByThemesAndCountry(themeIds, countryName);
     orgs.forEach((org) => {
       nonProfits.push({
         name: org.name,
