@@ -7,9 +7,10 @@ import logo from "../../public/relief-map-logo.png";
 import Image from "next/image";
 
 // https://youtu.be/PZlPBOqb3kg
-const isoToEmoji = (iso: string) =>
+const isoToEmoji = (iso = "  ") =>
   iso
     .split("")
+    .slice(0, 2)
     .map((letter) => (letter.charCodeAt(0) % 32) + 0x1f1e5)
     .map((unicode) => String.fromCodePoint(unicode))
     .join("");
@@ -29,7 +30,6 @@ export default function MainSideBar({
   filter,
   setFilter,
 }: MainSideBarProps) {
-  // const getCountryName = new Intl.DisplayNames(["en"], { type: "region" });
   const isSelected = (disaster: mapObject) =>
     selectedDisaster && disaster.name === selectedDisaster.name;
 
@@ -78,38 +78,46 @@ export default function MainSideBar({
               >
                 <div className="flex flex-col justify-between">
                   <h2 className="text-lg font-bold">{disaster.name}</h2>
+                  <p>{isoToEmoji(disaster.countryIso)}</p>
                   <p>{disaster.disasterType}</p>
-                  <p>
-                    <span className="pr-2">
-                      {isoToEmoji(disaster.countryIso)}
-                    </span>
-                    {/*{getCountryName.of(disaster.countryIso)}*/}
-                  </p>
                   {isSelected(disaster) && (
                     <>
                       <div className="mt-2">
                         <h3 className="text-md font-bold">
-                          Who&apos;s Helping
+                          What&apos;s happening?
                         </h3>
 
-                        {disaster.organizations.map((org) => (
+                        <div className="mt-4 max-h-16 overflow-hidden text-sm/5 text-white/50">
+                          {disaster.summary}
+                        </div>
+
+                        <h3 className="text-md mt-4 font-bold">
+                          Who&apos;s helping?
+                        </h3>
+
+                        {disaster.nonProfits.slice(0, 5).map((np) => (
                           <div
-                            key={org.name}
-                            className="flex flex-row justify-between"
+                            key={np.name}
+                            className="mb-2 flex flex-row items-center justify-start gap-2"
                           >
+                            {/* eslint-disable-next-line @next/next/no-img-element*/}
+                            <img
+                              src={np.logoUrl}
+                              alt={np.name}
+                              width={50}
+                              height={50}
+                              className="rounded-xl"
+                            />
                             <a
-                              href={org.websiteUrl}
+                              href={np.websiteUrl}
                               target="_blank"
                               rel="noreferrer"
                               className="text-indigo-300 hover:underline"
                             >
-                              {org.name}
+                              {np.name}
                             </a>
                           </div>
                         ))}
-                      </div>
-                      <div className="mt-2 text-sm/5 text-white/50">
-                        {disaster.summary}
                       </div>
                     </>
                   )}
