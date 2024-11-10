@@ -1,28 +1,29 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-// import { getActiveCrisies } from "@/server/crisises";
-// import { getAllCountries, getAllUniqueThemes, searchOrganizationsByThemesAndCountry } from "@/server/organizations";
 import { getCountryGeoJson } from "@/server/countries";
-import { main, mapObject } from "@/server/client";
+import Home from "@/components/Home";
+import { Suspense } from "react";
 
-export default function Home() {
-  const Map = dynamic(() => import("@/components/Map"), { ssr: false });
+export const dynamic = "force-static";
 
-  const [geoJson, setGeoJson] = useState<GeoJSON.GeoJSON | null>(null);
-  const [, setMainData] = useState<mapObject[]>();
+async function fetchHomeData() {
+  try {
+    const geoJson = await getCountryGeoJson("Canada");
+    return geoJson;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
-  useEffect(() => {
-    getCountryGeoJson("Canada").then(setGeoJson);
-  }, []);
+async function HomePageComponent() {
+  const geoJson = await fetchHomeData();
 
-  useEffect(() => {
-    main().then((d) => {
-      console.log(d);
-      setMainData(d);
-    });
-  }, []);
+  return <Home geoJson={geoJson} />;
+}
 
-  return <main>{geoJson && <Map geoJson={geoJson} />}</main>;
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomePageComponent />
+    </Suspense>
+  );
 }

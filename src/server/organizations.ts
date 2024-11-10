@@ -1,5 +1,4 @@
-import fs from "fs";
-import path from "path";
+import organizationsData from "./data/organization-data.json";
 
 type Country = {
   iso3166CountryCode: string;
@@ -35,25 +34,16 @@ type NamedType = {
   name: string;
 };
 
-export async function searchOrganizationsByThemesAndCountry(
+export function searchOrganizationsByThemesAndCountry(
   themeIds: string[],
   countryName: string,
-): Promise<Organization[]> {
-  const filePath = path.join(
-    process.cwd(),
-    "src",
-    "server",
-    "data",
-    "organization-data.json",
-  );
-
-  // Read and parse the JSON file
-  const data = await fs.promises.readFile(filePath, "utf-8");
-  const organizationsData = JSON.parse(data);
-
+): Organization[] {
   // Assuming the JSON structure is as described
-  const organizations: Organization[] =
-    organizationsData.organizations.organization;
+  const organizations: Organization[] = (
+    organizationsData as unknown as {
+      organizations: { organization: Organization[] };
+    }
+  ).organizations.organization;
 
   return organizations.filter((org) => {
     // Handle country being an object or array of objects
@@ -77,22 +67,13 @@ export type Theme = {
   name: string;
 };
 
-export async function getAllUniqueThemes(): Promise<Theme[]> {
-  const filePath = path.join(
-    process.cwd(),
-    "src",
-    "server",
-    "data",
-    "organization-data.json",
-  );
-
-  // Read and parse the JSON file
-  const data = await fs.promises.readFile(filePath, "utf-8");
-  const organizationsData = JSON.parse(data);
-
+export function getAllUniqueThemes(): Theme[] {
   // Assuming the JSON structure is as described
-  const organizations: Organization[] =
-    organizationsData.organizations.organization;
+  const organizations: Organization[] = (
+    organizationsData as unknown as {
+      organizations: { organization: Organization[] };
+    }
+  ).organizations.organization;
 
   // Collect unique themes
   const themesMap = new Map<string, string>();
