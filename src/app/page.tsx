@@ -11,7 +11,7 @@ export default function Home() {
   const Map = dynamic(() => import("@/components/Map"), { ssr: false });
 
   const [geoJson, setGeoJson] = useState<GeoJSON.GeoJSON | null>(null);
-  const [mainData, setMainData] = useState<mapObject[]>()
+  const [, setMainData] = useState<mapObject[]>();
 
   useEffect(() => {
     getCountryGeoJson("Canada").then(setGeoJson);

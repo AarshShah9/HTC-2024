@@ -12,7 +12,7 @@ type Organization = {
   addressLine2?: string;
   city: string;
   countries: {
-    country: Country | Country[];  // country can be either an object or an array of objects
+    country: Country | Country[]; // country can be either an object or an array of objects
   };
   country: string;
   ein: string;
@@ -31,9 +31,9 @@ type Organization = {
 };
 
 type NamedType = {
-  id: string
-  name: string
-}
+  id: string;
+  name: string;
+};
 
 export async function searchOrganizationsByThemesAndCountry(
   themeIds: string[],
@@ -41,7 +41,10 @@ export async function searchOrganizationsByThemesAndCountry(
 ): Promise<Organization[]> {
   const filePath = path.join(
     process.cwd(),
-    "src", "server", "data", "organization-data.json",
+    "src",
+    "server",
+    "data",
+    "organization-data.json",
   );
 
   // Read and parse the JSON file
@@ -52,17 +55,17 @@ export async function searchOrganizationsByThemesAndCountry(
   const organizations: Organization[] =
     organizationsData.organizations.organization;
 
-  return organizations.filter(org => {
+  return organizations.filter((org) => {
     // Handle country being an object or array of objects
     const country = org.countries?.country;
     const matchesCountry = Array.isArray(country)
-      ? country.some(c => c.name === countryName)
+      ? country.some((c) => c.name === countryName)
       : country?.name === countryName;
 
     // Handle theme being an object or an array of objects
     const themes = org.themes?.theme;
     const matchesTheme = Array.isArray(themes)
-      ? themes.some(theme => themeIds.includes(theme.id))
+      ? themes.some((theme) => themeIds.includes(theme.id))
       : themes && themeIds.includes(themes.id);
 
     return matchesCountry && matchesTheme;
