@@ -33,8 +33,6 @@ export default function MainSideBar({
   const isSelected = (disaster: mapObject) =>
     selectedDisaster && disaster.name === selectedDisaster.name;
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <>
       <div className="max-h-screen w-1/3 overflow-auto transition duration-100 ease-in data-[closed]:opacity-0">
@@ -52,11 +50,12 @@ export default function MainSideBar({
             <button
               type="button"
               className="mr-4 mt-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black shadow-sm hover:bg-[#f1f5f9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={() => window.open("https://us.makeforms.co/ijbwnfo/", "_blank")}
+              onClick={() =>
+                window.open("https://us.makeforms.co/ijbwnfo/", "_blank")
+              }
             >
               Upload Invoice
             </button>
-
           </div>
           <div className="flex w-full flex-row justify-between gap-2 p-4">
             <Input
