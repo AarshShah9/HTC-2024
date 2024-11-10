@@ -1,49 +1,103 @@
 "use client";
 
-import { useState } from "react";
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-// import { XMarkIcon } from '@heroicons/react/24/outline'
+import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
+import { Input } from "@headlessui/react";
+import { mapObject } from "@/server/client";
 
-export default function MainSideBar() {
-  const [open, setOpen] = useState(true);
+// https://youtu.be/PZlPBOqb3kg
+const isoToEmoji = (iso: string) =>
+  iso
+    .split("")
+    .map((letter) => (letter.charCodeAt(0) % 32) + 0x1f1e5)
+    .map((unicode) => String.fromCodePoint(unicode))
+    .join("");
+
+type MainSideBarProps = {
+  disasterData: mapObject[];
+  selectedDisaster: mapObject | null;
+  setSelectedDisaster: (disaster: mapObject | null) => void;
+  filter: string;
+  setFilter: (filter: string) => void;
+};
+
+export default function MainSideBar({
+  disasterData,
+  selectedDisaster,
+  setSelectedDisaster,
+  filter,
+  setFilter,
+}: MainSideBarProps) {
+  // const getCountryName = new Intl.DisplayNames(["en"], { type: "region" });
+  const isSelected = (disaster: mapObject) =>
+    selectedDisaster && disaster.name === selectedDisaster.name;
 
   return (
-    <Dialog open={open} onClose={() => {}} className="relative z-10">
-      <div className="fixed inset-0" />
-      <div className="fixed inset-0 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-            <DialogPanel
-              transition
-              className="pointer-events-auto w-screen max-w-md transform transition duration-500 ease-in-out data-[closed]:translate-x-full sm:duration-700"
-            >
-              <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                <div className="px-4 sm:px-6">
-                  <div className="flex items-start justify-between">
-                    <DialogTitle className="text-base font-semibold text-gray-900">
-                      Panel title
-                    </DialogTitle>
-                    <div className="ml-3 flex h-7 items-center">
-                      <button
-                        type="button"
-                        onClick={() => setOpen(false)}
-                        className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      >
-                        <span className="absolute -inset-2.5" />
-                        <span className="sr-only">Close panel</span>
-                        {/*<XMarkIcon aria-hidden="true" className="h-6 w-6" />*/}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                  {/* Your content */}
+    <>
+      <div className="max-h-screen w-1/3 overflow-auto transition duration-100 ease-in data-[closed]:opacity-0">
+        <div className="flex h-full w-full flex-col">
+          <h1 className="p-4 text-xl font-bold">Product Name</h1>
+          <div className="flex w-full flex-row justify-between gap-2 p-4">
+            <Input
+              type="text"
+              placeholder="Search 🔎"
+              className="w-full rounded-xl border-2 border-zinc-400 bg-gradient-to-r from-zinc-800 to-zinc-900 p-2 font-bold"
+              onChange={(e) => setFilter(e.target.value)}
+              value={filter}
+            />
+            <button className="rounded-xl border-2 border-zinc-400 p-2">
+              <AdjustmentsHorizontalIcon className="h-6 w-6 text-white" />
+            </button>
+          </div>
+          <div className="p-4">
+            {disasterData.map((disaster) => (
+              <div
+                key={disaster.name}
+                onClick={() => setSelectedDisaster(disaster)}
+                className={`mb-4 rounded-xl border-2 ${isSelected(disaster) ? "border-cyan-600" : "border-zinc-400"} bg-gradient-to-tr from-zinc-950 to-zinc-600 p-4 shadow-lg`}
+              >
+                <div className="flex flex-col justify-between">
+                  <h2 className="text-lg font-bold">{disaster.name}</h2>
+                  <p>{disaster.disasterType}</p>
+                  <p>
+                    <span className="pr-2">
+                      {isoToEmoji(disaster.countryIso)}
+                    </span>
+                    {/*{getCountryName.of(disaster.countryIso)}*/}
+                  </p>
+                  {isSelected(disaster) && (
+                    <>
+                      <div className="mt-2">
+                        <h3 className="text-md font-bold">
+                          Who&apos;s Helping
+                        </h3>
+
+                        {disaster.organizations.map((org) => (
+                          <div
+                            key={org.name}
+                            className="flex flex-row justify-between"
+                          >
+                            <a
+                              href={org.websiteUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-indigo-300 hover:underline"
+                            >
+                              {org.name}
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-2 text-sm/5 text-white/50">
+                        {disaster.summary}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-            </DialogPanel>
+            ))}
           </div>
         </div>
       </div>
-    </Dialog>
+    </>
   );
 }
