@@ -107,33 +107,37 @@ export default function MainSideBar({
                             {disaster.summary}
                           </div>
 
-                          <h3 className="text-md mt-4 font-bold">
-                            Who&apos;s helping?
-                          </h3>
+                          {disaster.nonProfits.length > 0 && (
+                            <>
+                              <h3 className="text-md mt-4 font-bold">
+                                Who&apos;s helping?
+                              </h3>
 
-                          {disaster.nonProfits.slice(0, 5).map((np) => (
-                            <div
-                              key={np.name}
-                              className="mb-2 flex flex-row items-center justify-start gap-2"
-                            >
-                              {/* eslint-disable-next-line @next/next/no-img-element*/}
-                              <img
-                                src={np.logoUrl}
-                                alt={np.name}
-                                width={50}
-                                height={50}
-                                className="rounded-xl"
-                              />
-                              <a
-                                href={np.websiteUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-indigo-300 hover:underline"
-                              >
-                                {np.name}
-                              </a>
-                            </div>
-                          ))}
+                              {disaster.nonProfits.slice(0, 5).map((np) => (
+                                <div
+                                  key={np.name}
+                                  className="mb-2 flex flex-row items-center justify-start gap-2"
+                                >
+                                  {/* eslint-disable-next-line @next/next/no-img-element*/}
+                                  <img
+                                    src={np.logoUrl}
+                                    alt={np.name}
+                                    width={50}
+                                    height={50}
+                                    className="rounded-xl"
+                                  />
+                                  <a
+                                    href={np.websiteUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="text-indigo-300 hover:underline"
+                                  >
+                                    {np.name}
+                                  </a>
+                                </div>
+                              ))}
+                            </>
+                          )}
                         </div>
                       </>
                     )}
