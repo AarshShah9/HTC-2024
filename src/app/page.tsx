@@ -3,5 +3,5 @@ import { main } from "@/server/client";
 
 export default async function Page() {
   const disasters = await main();
-  return <MainPage disasters={disasters} />;
+  return <MainPage disasters={disasters || []} />;
 }
