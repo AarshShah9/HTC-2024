@@ -1,8 +1,18 @@
 "use client";
 
+import { main, mapObject } from "@/server/client";
+import { useQuery } from "@tanstack/react-query";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 
 export default function Map({ geoJson }: { geoJson: GeoJSON.GeoJSON }) {
+  const { data } = useQuery({
+    queryKey: ["mapData"],
+    queryFn: () => main(),
+    staleTime: 1000 * 60 * 10, // 10 minutes
+  });
+
+  console.log(data);
+
   return (
     <MapContainer
       center={[0, 0]}

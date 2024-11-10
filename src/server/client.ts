@@ -39,19 +39,21 @@ export async function main(): Promise<mapObject[]> {
   const activeCrises = await getActiveCrisies();
 
   // get all the themes that exist in the non profit organizations
-  const themes = await getAllUniqueThemes();
+  const themes = getAllUniqueThemes();
 
   // pass all of the themes and active crises to an LLM and get each crises to be categorized by n # of themes
   const categorizedCrises = await categorizeCrisesByThemes(
     activeCrises!,
     themes,
   );
+
+
   // Then for each crises call searchOrganizationsByThemeAndCountry(themeId, countryCode) and add the non-profit organizations that are found as a result to each organization
   for (const { crisis, themeIds } of categorizedCrises) {
     const nonProfits: nonProfit[] = [];
     const countryCode = crisis.data?.[0].fields.country?.[0].iso3 ?? "";
     const countryName = crisis.data?.[0].fields.country?.[0].name ?? "";
-    const orgs = await searchOrganizationsByThemesAndCountry(
+    const orgs = searchOrganizationsByThemesAndCountry(
       themeIds,
       countryName,
     );

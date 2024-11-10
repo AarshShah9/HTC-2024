@@ -1,7 +1,3 @@
-"use server";
-
-import { GeoJSON } from "react-leaflet";
-
 export async function getCountryGeoJson(
   country: string,
 ): Promise<GeoJSON.GeoJSON | null> {
@@ -14,8 +10,8 @@ export async function getCountryGeoJson(
 
     const result = await fetch(
       "https://nominatim.openstreetmap.org/search?" +
-        new URLSearchParams(query).toString(),
-    );
+      new URLSearchParams(query).toString(),
+      { cache: 'force-cache' });
     const resultJson = await result.json();
     return resultJson;
   } catch (error) {
