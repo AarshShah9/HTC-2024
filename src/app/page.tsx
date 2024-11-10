@@ -28,7 +28,9 @@ const disasterFilter = (disaster: Disaster, filter: string) => {
 export default function Home() {
   const [isMapReady, setIsMapReady] = useState<boolean>(false);
   const [centerCoords, setCenterCoords] = useState<number[]>([0, 0]);
-  const [selectedDisaster, setSelectedDisaster] = useState<string | null>(null);
+  const [selectedDisaster, setSelectedDisaster] = useState<Disaster | null>(
+    null,
+  );
   const [filter, setFilter] = useState<string>("");
   const [filteredData, setFilteredData] = useState(disasterData);
 
@@ -64,7 +66,6 @@ export default function Home() {
           disasterData={filteredData}
           centerCoords={centerCoords}
           setSelectedDisaster={setSelectedDisaster}
-          filter={filter}
           setFilter={setFilter}
           whenReady={() => setIsMapReady(true)}
         />

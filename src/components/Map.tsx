@@ -1,24 +1,27 @@
 "use client";
 
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import L from "leaflet";
 
 import HighlightedCountries from "@/components/mapLayers/HighlightedCountries";
 import { Disaster } from "@/types/disaster";
 import HotSpots from "./mapLayers/HotSpots";
 
 type MapProps = {
+  disasterData: Disaster[];
+  setFilter: (filter: string) => void;
   whenReady: () => void;
-  centerCoords: L.LatLng;
-  dummyData: Disaster[];
-  setSelectedDisaster: (disaster: string | null) => void;
+  centerCoords: number[];
+  setSelectedDisaster: (disaster: Disaster | null) => void;
 };
 
-const RecenterHandler = ({ centerCoords }: { centerCoords: L.LatLng }) => {
+const RecenterHandler = ({ centerCoords }: { centerCoords: number[] }) => {
   const map = useMap();
-  if (!centerCoords || !map) {
+  if (!map || centerCoords?.length !== 2) {
     return null;
   }
-  map.setView(centerCoords, map.getZoom());
+  const centerLatLng = L.latLng(centerCoords[0], centerCoords[1]);
+  map.setView(centerLatLng, map.getZoom());
   return null;
 };
 
@@ -35,7 +38,7 @@ export default function Map({
       zoom={3}
       className="relative z-0 h-full w-full rounded-lg border-2 border-zinc-800"
       worldCopyJump={true}
-      whenReady={whenReady()}
+      whenReady={whenReady}
       maxBounds={[
         [-85, -180], // Southwest corner
         [85, 180], // Northeast corner

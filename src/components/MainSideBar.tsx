@@ -12,15 +12,21 @@ const isoToEmoji = (iso: string) =>
     .map((unicode) => String.fromCodePoint(unicode))
     .join("");
 
+type MainSideBarProps = {
+  disasterData: Disaster[];
+  selectedDisaster: Disaster | null;
+  setSelectedDisaster: (disaster: Disaster | null) => void;
+  filter: string;
+  setFilter: (filter: string) => void;
+};
+
 export default function MainSideBar({
   disasterData,
   selectedDisaster,
   setSelectedDisaster,
   filter,
   setFilter,
-}: {
-  disasterData: Disaster[];
-}) {
+}: MainSideBarProps) {
   const getCountryName = new Intl.DisplayNames(["en"], { type: "region" });
   const isSelected = (disaster: Disaster) =>
     selectedDisaster && disaster.name === selectedDisaster.name;
@@ -45,7 +51,6 @@ export default function MainSideBar({
           <div className="p-4">
             {disasterData.map((disaster) => (
               <div
-                as="div"
                 key={disaster.name}
                 onClick={() => setSelectedDisaster(disaster)}
                 className={`mb-4 rounded-xl border-2 ${isSelected(disaster) ? "border-cyan-600" : "border-zinc-400"} bg-gradient-to-tr from-zinc-950 to-zinc-600 p-4 shadow-lg`}

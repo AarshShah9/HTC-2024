@@ -4,28 +4,17 @@ import { getCountryGeoJson } from "@/server/countries";
 import { Disaster } from "@/types/disaster";
 import L from "leaflet";
 
-const getCountryColor = (countryIso: string): string => {
-  // Simple "hash" function based on country code
-  const hash = Array.from(countryIso).reduce(
-    (acc: number, char: string) => acc + char.charCodeAt(0),
-    0,
-  );
+import { getCountryColor } from "@/utils/countryColor";
 
-  // Generate RGB values by manipulating the hash
-  const red = (hash * 16) % 256;
-  const green = (hash * 32) % 256;
-  const blue = (hash * 64) % 256;
-
-  return `rgb(${red}, ${green}, ${blue})`;
+type HighlightedCountriesProps = {
+  disasterData: Disaster[];
+  setFilter: (filter: string) => void;
 };
 
 export default function HighlightedCountries({
   disasterData,
-  setSelectedDisaster,
   setFilter,
-}: {
-  disasterData: Disaster[];
-}) {
+}: HighlightedCountriesProps) {
   const context = useLeafletContext();
   const countriesInMap = useRef(new Set<string>());
   // const previousDisasterData = useRef<Disaster[]>(disasterData);
@@ -71,5 +60,6 @@ export default function HighlightedCountries({
         countryLayers.current.push(countryLayer);
       });
     });
-  }, [disasterData, setFilter, context, setSelectedDisaster]);
+  }, [disasterData, setFilter, context]);
+  return null;
 }
