@@ -9,13 +9,16 @@
     "lint": "next lint --fix"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.1.5",
     "leaflet": "^1.9.4",
     "next": "15.0.3",
+    "prisma": "^5.22.0",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
-    "react-leaflet": "^5.0.0-rc.1"
+    "react-leaflet": "^5.0.0-rc.1",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.14",

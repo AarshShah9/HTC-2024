@@ -26,12 +26,12 @@ const RecenterHandler = ({ centerCoords }: { centerCoords: number[] }) => {
 };
 
 export default function Map({
-  whenReady,
-  centerCoords,
-  disasterData,
-  setSelectedDisaster,
-  setFilter,
-}: MapProps) {
+                              whenReady,
+                              centerCoords,
+                              disasterData,
+                              setSelectedDisaster,
+                              setFilter,
+                            }: MapProps) {
   return (
     <MapContainer
       center={[0, 0]}
