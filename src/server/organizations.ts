@@ -37,17 +37,47 @@ export async function searchOrganizationsByThemeAndCountry(
   themeId: string,
   countryCode: string,
 ): Promise<Organization[]> {
-  const filePath = path.join(process.cwd(), "data", "organization-data.json");
+  const filePath = path.join(
+    process.cwd(),
+    "src\\server\\data",
+    "organization-data.json",
+  );
+  // Read and parse the JSON file
+  const data = await fs.promises.readFile(filePath, "utf-8");
+  const organizationsData = JSON.parse(data);
+
+  // Assuming the JSON structure is as described
+  const organizations: Organization[] =
+    organizationsData.organizations.organization;
+
+  // Filter organizations by theme and country
+  return organizations.filter(org =>
+    org.countries?.country?.iso3166CountryCode === countryCode &&
+    org.themes?.theme?.some(t => t.id === themeId)
+  );
+}
+
+export async function searchOrganizationsByThemesAndCountry(
+  themeIds: string[],
+  countryCode: string,
+): Promise<Organization[]> {
+  const filePath = path.join(
+    process.cwd(),
+    "src", "server", "data", "organization-data.json",
+  );
 
   // Read and parse the JSON file
   const data = await fs.promises.readFile(filePath, "utf-8");
-  const organizations: Organization[] = JSON.parse(data);
+  const organizationsData = JSON.parse(data);
 
-  // Filter organizations by theme and country
-  return organizations.filter(
-    (org) =>
-      org.countries.country.iso3166CountryCode === countryCode &&
-      org.themes.theme.some((t) => t.id === themeId),
+  // Assuming the JSON structure is as described
+  const organizations: Organization[] =
+    organizationsData.organizations.organization;
+
+  // Filter organizations by the list of theme IDs and country, with null checks
+  return organizations.filter(org =>
+    org.countries?.country?.iso3166CountryCode === countryCode &&
+    org.themes?.theme?.some(theme => themeIds.includes(theme.id))
   );
 }
 
@@ -57,17 +87,22 @@ type Country = {
 };
 
 export async function getAllCountries(): Promise<Country[]> {
-  const filePath = path.join(process.cwd(), "src\\server\\data", "organization-data.json");
+  const filePath = path.join(
+    process.cwd(),
+    "src\\server\\data",
+    "organization-data.json",
+  );
   // Read and parse the JSON file
-  const data = await fs.promises.readFile(filePath, 'utf-8');
+  const data = await fs.promises.readFile(filePath, "utf-8");
   const organizationsData = JSON.parse(data);
 
   // Assuming the JSON structure is as described
-  const organizations: Organization[] = organizationsData.organizations.organization;
+  const organizations: Organization[] =
+    organizationsData.organizations.organization;
 
   // Collect unique countries
- const countriesMap = new Map<string, string>();
-  organizations.forEach(org => {
+  const countriesMap = new Map<string, string>();
+  organizations.forEach((org) => {
     const country = org.countries?.country;
     if (country && country.iso3166CountryCode) {
       if (!countriesMap.has(country.iso3166CountryCode)) {
@@ -77,32 +112,42 @@ export async function getAllCountries(): Promise<Country[]> {
   });
 
   // Convert the Map to an array of Country objects
-  return Array.from(countriesMap, ([iso3166CountryCode, name]) => ({ iso3166CountryCode, name }));
+  return Array.from(countriesMap, ([iso3166CountryCode, name]) => ({
+    iso3166CountryCode,
+    name,
+  }));
 }
 
-type Theme = {
+export type Theme = {
   id: string;
   name: string;
 };
 
 export async function getAllUniqueThemes(): Promise<Theme[]> {
-  const filePath = path.join(process.cwd(), "src", "server", "data", "organization-data.json");
+  const filePath = path.join(
+    process.cwd(),
+    "src",
+    "server",
+    "data",
+    "organization-data.json",
+  );
 
   // Read and parse the JSON file
-  const data = await fs.promises.readFile(filePath, 'utf-8');
+  const data = await fs.promises.readFile(filePath, "utf-8");
   const organizationsData = JSON.parse(data);
 
   // Assuming the JSON structure is as described
-  const organizations: Organization[] = organizationsData.organizations.organization;
+  const organizations: Organization[] =
+    organizationsData.organizations.organization;
 
   // Collect unique themes
   const themesMap = new Map<string, string>();
-  organizations.forEach(org => {
+  organizations.forEach((org) => {
     const themes = org.themes?.theme;
 
     // Ensure themes is an array before using forEach
     if (Array.isArray(themes)) {
-      themes.forEach(theme => {
+      themes.forEach((theme) => {
         if (!themesMap.has(theme.id)) {
           themesMap.set(theme.id, theme.name);
         }
