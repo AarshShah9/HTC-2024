@@ -4,15 +4,15 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 
 import HighlightedCountries from "@/components/mapLayers/HighlightedCountries";
-import { Disaster } from "@/types/disaster";
 import HotSpots from "./mapLayers/HotSpots";
+import { mapObject } from "@/server/client";
 
 type MapProps = {
-  disasterData: Disaster[];
+  disasterData: mapObject[];
   setFilter: (filter: string) => void;
   whenReady: () => void;
   centerCoords: number[];
-  setSelectedDisaster: (disaster: Disaster | null) => void;
+  setSelectedDisaster: (disaster: mapObject | null) => void;
 };
 
 const RecenterHandler = ({ centerCoords }: { centerCoords: number[] }) => {
@@ -26,12 +26,12 @@ const RecenterHandler = ({ centerCoords }: { centerCoords: number[] }) => {
 };
 
 export default function Map({
-                              whenReady,
-                              centerCoords,
-                              disasterData,
-                              setSelectedDisaster,
-                              setFilter,
-                            }: MapProps) {
+  whenReady,
+  centerCoords,
+  disasterData,
+  setSelectedDisaster,
+  setFilter,
+}: MapProps) {
   return (
     <MapContainer
       center={[0, 0]}

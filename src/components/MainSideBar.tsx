@@ -2,7 +2,7 @@
 
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
 import { Input } from "@headlessui/react";
-import { Disaster } from "@/types/disaster";
+import { mapObject } from "@/server/client";
 
 // https://youtu.be/PZlPBOqb3kg
 const isoToEmoji = (iso: string) =>
@@ -13,9 +13,9 @@ const isoToEmoji = (iso: string) =>
     .join("");
 
 type MainSideBarProps = {
-  disasterData: Disaster[];
-  selectedDisaster: Disaster | null;
-  setSelectedDisaster: (disaster: Disaster | null) => void;
+  disasterData: mapObject[];
+  selectedDisaster: mapObject | null;
+  setSelectedDisaster: (disaster: mapObject | null) => void;
   filter: string;
   setFilter: (filter: string) => void;
 };
@@ -27,13 +27,13 @@ export default function MainSideBar({
   filter,
   setFilter,
 }: MainSideBarProps) {
-  const getCountryName = new Intl.DisplayNames(["en"], { type: "region" });
-  const isSelected = (disaster: Disaster) =>
+  // const getCountryName = new Intl.DisplayNames(["en"], { type: "region" });
+  const isSelected = (disaster: mapObject) =>
     selectedDisaster && disaster.name === selectedDisaster.name;
 
   return (
     <>
-      <div className="w-1/3 transition duration-100 ease-in data-[closed]:opacity-0">
+      <div className="max-h-screen w-1/3 overflow-auto transition duration-100 ease-in data-[closed]:opacity-0">
         <div className="flex h-full w-full flex-col">
           <h1 className="p-4 text-xl font-bold">Product Name</h1>
           <div className="flex w-full flex-row justify-between gap-2 p-4">
@@ -62,7 +62,7 @@ export default function MainSideBar({
                     <span className="pr-2">
                       {isoToEmoji(disaster.countryIso)}
                     </span>
-                    {getCountryName.of(disaster.countryIso)}
+                    {/*{getCountryName.of(disaster.countryIso)}*/}
                   </p>
                   {isSelected(disaster) && (
                     <>
@@ -71,13 +71,13 @@ export default function MainSideBar({
                           Who&apos;s Helping
                         </h3>
 
-                        {disaster.orgs.map((org) => (
+                        {disaster.organizations.map((org) => (
                           <div
                             key={org.name}
                             className="flex flex-row justify-between"
                           >
                             <a
-                              href={org.url}
+                              href={org.websiteUrl}
                               target="_blank"
                               rel="noreferrer"
                               className="text-indigo-300 hover:underline"

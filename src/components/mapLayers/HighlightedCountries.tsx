@@ -1,13 +1,13 @@
 import { useLeafletContext } from "@react-leaflet/core";
 import { useEffect, useRef } from "react";
 import { getCountryGeoJson } from "@/server/countries";
-import { Disaster } from "@/types/disaster";
 import L from "leaflet";
 
 import { getCountryColor } from "@/utils/countryColor";
+import { mapObject } from "@/server/client";
 
 type HighlightedCountriesProps = {
-  disasterData: Disaster[];
+  disasterData: mapObject[];
   setFilter: (filter: string) => void;
 };
 

@@ -9,6 +9,7 @@ import {
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
 export type mapObject = {
+  name: string;
   lat: number;
   lng: number;
   countryIso: string;
@@ -64,6 +65,7 @@ export async function main(): Promise<mapObject[]> {
 
     // then construct the mO list and return it to the client side
     mO.push({
+      name: crisis.data?.[0].fields.name || "",
       lat: crisis.data?.[0].fields.country?.[0].location.lat,
       lng: crisis.data?.[0].fields.country?.[0].location.lon,
       countryIso: countryCode,
