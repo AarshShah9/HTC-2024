@@ -1,27 +1,26 @@
 "use client";
+
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
-import { getCountryPolygon } from "@/server/countries";
+import { getCountryGeoJson } from "@/server/countries";
+import { GeoJSON } from "react-leaflet";
 
 import MainSideBar from "@/components/MainSideBar";
-import Map from "@/components/Map";
 
 export default function Home() {
-  const [poly, setPoly] = useState([]);
+  const Map = dynamic(() => import("@/components/Map"), { ssr: false });
+
+  const [geoJson, setGeoJson] = useState<GeoJSON.GeoJSON | null>(null);
+
   useEffect(() => {
-    (async () => {
-      const polygonCoordinates = await getCountryPolygon("Canada");
-      if (!polygonCoordinates) {
-        return;
-      }
-      setPoly(L.GeoJSON.coordsToLatLngs(polygonCoordinates, 2));
-    })();
+    getCountryGeoJson("Canada").then(setGeoJson);
   }, []);
 
   return (
     <main>
       <MainSideBar />
-      <Map poly={poly} />
+      {geoJson && <Map geoJson={geoJson} />}
     </main>
   );
 }
