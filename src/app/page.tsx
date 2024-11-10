@@ -2,32 +2,26 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { getActiveCrisies } from "@/server/crisises";
-import { getAllCountries, getAllUniqueThemes, searchOrganizationsByThemeAndCountry, searchOrganizationsByThemesAndCountry } from "@/server/organizations";
+// import { getActiveCrisies } from "@/server/crisises";
+// import { getAllCountries, getAllUniqueThemes, searchOrganizationsByThemesAndCountry } from "@/server/organizations";
 import { getCountryGeoJson } from "@/server/countries";
+import { main, mapObject } from "@/server/client";
 
 export default function Home() {
   const Map = dynamic(() => import("@/components/Map"), { ssr: false });
 
   const [geoJson, setGeoJson] = useState<GeoJSON.GeoJSON | null>(null);
+  const [mainData, setMainData] = useState<mapObject[]>()
 
   useEffect(() => {
     getCountryGeoJson("Canada").then(setGeoJson);
   }, []);
 
   useEffect(() => {
-    // getAllCountries().then((d) => {
-    //   console.log(d);
-    // });
-    getAllUniqueThemes().then((d) => {
+    main().then((d) => {
       console.log(d);
+      setMainData(d);
     });
-    searchOrganizationsByThemesAndCountry(["rights", "edu"], "UG").then((d) => {
-      console.log(d);
-    });
-    // getActiveCrisies().then((d) => {
-    //   console.log(d);
-    // });
   }, []);
 
   return <main>{geoJson && <Map geoJson={geoJson} />}</main>;

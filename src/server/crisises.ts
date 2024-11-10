@@ -1,5 +1,3 @@
-"use server";
-
 export type DisasterResponse = {
   time: number;
   href: string;
@@ -145,7 +143,7 @@ async function getOngoingOrAlertDisasters() {
       }
     }
 
-    console.log("All Disaster Details:", disasterDetails);
+    // console.log("All Disaster Details:", disasterDetails);
     return disasterDetails;
   } catch (error) {
     console.error("Failed to fetch disasters:", error);
