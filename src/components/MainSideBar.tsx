@@ -3,6 +3,8 @@
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/solid";
 import { Input } from "@headlessui/react";
 import { mapObject } from "@/server/client";
+import logo from "../../public/relief-map-logo.png";
+import Image from "next/image";
 
 // https://youtu.be/PZlPBOqb3kg
 const isoToEmoji = (iso: string) =>
@@ -31,11 +33,31 @@ export default function MainSideBar({
   const isSelected = (disaster: mapObject) =>
     selectedDisaster && disaster.name === selectedDisaster.name;
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       <div className="max-h-screen w-1/3 overflow-auto transition duration-100 ease-in data-[closed]:opacity-0">
         <div className="flex h-full w-full flex-col">
-          <h1 className="p-4 text-xl font-bold">Product Name</h1>
+          <div className={"flex flex-row justify-between"}>
+            <div className={"ml-4 mt-2"}>
+              <Image
+                src={logo}
+                alt="Relief Map Logo"
+                width={100}
+                height={100}
+                priority
+              />
+            </div>
+            <button
+              type="button"
+              className="mr-4 mt-2 rounded bg-white px-2 py-1 text-sm font-semibold text-black shadow-sm hover:bg-[#f1f5f9] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={() => window.open("https://us.makeforms.co/ijbwnfo/", "_blank")}
+            >
+              Upload Invoice
+            </button>
+
+          </div>
           <div className="flex w-full flex-row justify-between gap-2 p-4">
             <Input
               type="text"
