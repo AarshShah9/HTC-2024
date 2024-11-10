@@ -64,7 +64,6 @@ export default function MainPage({ disasters }: { disasters: mapObject[] }) {
           disasterData={filteredData}
           centerCoords={centerCoords}
           setSelectedDisaster={setSelectedDisaster}
-          setFilter={setFilter}
           whenReady={() => setIsMapReady(true)}
         />
 

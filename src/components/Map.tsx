@@ -3,13 +3,11 @@
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 
-import HighlightedCountries from "@/components/mapLayers/HighlightedCountries";
 import HotSpots from "./mapLayers/HotSpots";
 import { mapObject } from "@/server/client";
 
 type MapProps = {
   disasterData: mapObject[];
-  setFilter: (filter: string) => void;
   whenReady: () => void;
   centerCoords: number[];
   setSelectedDisaster: (disaster: mapObject | null) => void;
@@ -30,7 +28,6 @@ export default function Map({
   centerCoords,
   disasterData,
   setSelectedDisaster,
-  setFilter,
 }: MapProps) {
   return (
     <MapContainer
@@ -50,7 +47,6 @@ export default function Map({
         disasterData={disasterData}
         setSelectedDisaster={setSelectedDisaster}
       />
-      <HighlightedCountries disasterData={disasterData} setFilter={setFilter} />
       <TileLayer
         url="https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}"
         accessToken="WYUholf8Kd9VFs67vN1lrIKrzlTv0KTcdtwi0KWfubYj6XCRgnXUKOaDZ6cwq9uB"
