@@ -1,5 +1,8 @@
+import { OpenAI } from "openai";
+const openai = new OpenAI();
 import { DisasterResponse, getActiveCrisies } from "./crisises";
 import { getAllUniqueThemes, searchOrganizationsByThemeAndCountry, searchOrganizationsByThemesAndCountry, Theme } from "./organizations";
+import embeddings from "@/server/data/themeEmbeddings.json";
 
 type mapObject = {
   lat: number;
@@ -77,10 +80,29 @@ export async function main(): Promise<mapObject[]> {
   return mO;
 }
 
+function cosineSimilarity(vecA: number[], vecB: number[]) {
+  const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
+  const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
+  const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
+
+  if (magnitudeA === 0 || magnitudeB === 0) return 0; // Handle zero-vector cases
+
+  return dotProduct / (magnitudeA * magnitudeB);
+}
+
 async function categorizeCrisesByThemes(
   crises: DisasterResponse[],
   themes: Theme[],
 ): Promise<{ crisis: DisasterResponse; themeIds: string[] }[]> {
   // Logic to categorize crises based on themes using an LLM
-  return crises?.map((crisis) => ({ crisis, themeIds: ["exampleThemeId"] })); // Stub implementation
+  const embedding = await openai.embeddings.create({
+    model: "text-embedding-3-small",
+    input: crises[0].data?.[0].fields.primary_type.name,
+    encoding_format: "float",
+  });
+
+  const themeEmbeddings = embeddings.embeddings;
+
+  const matchingThemes = themeEmbeddings.filter((theme) => cosineSimilarity(embedding.data[0].embedding, theme.embedding) > 0.5);
+  return crises?.map((crisis) => ({ crisis, themeIds: matchingThemes.map(theme => theme.id) })); // Stub implementation
 }
