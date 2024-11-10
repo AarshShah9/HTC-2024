@@ -1,18 +1,23 @@
 "use server";
 
-export async function getCountryPolygon(country) {
+import { GeoJSON } from "react-leaflet";
+
+export async function getCountryGeoJson(
+  country: string,
+): Promise<GeoJSON.GeoJSON | null> {
   try {
-    const countryPoly = await fetch(
+    const query = {
+      country: country.trim(),
+      format: "geojson",
+      polygon_geojson: "1",
+    } as Record<string, string>;
+
+    const result = await fetch(
       "https://nominatim.openstreetmap.org/search?" +
-        new URLSearchParams({
-          country: country.trim(),
-          format: "json",
-          polygon_geojson: 1,
-        }).toString(),
+        new URLSearchParams(query).toString(),
     );
-    const countryData = await countryPoly.json();
-    const { coordinates } = countryData[0].geojson;
-    return coordinates;
+    const resultJson = await result.json();
+    return resultJson;
   } catch (error) {
     console.error(error);
     return null;

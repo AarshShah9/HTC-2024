@@ -1,24 +1,22 @@
 "use client";
+
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { getCountryPolygon } from "@/server/countries";
-import MainSideBar from "@/components/MainSideBar";
-import Map from "@/components/Map";
-import { getAllCountries, getAllUniqueThemes } from "@/server/organizations";
 import { getActiveCrisies } from "@/server/crisises";
+import { getAllCountries, getAllUniqueThemes } from "@/server/organizations";
+import { getCountryGeoJson } from "@/server/countries";
+import { GeoJSON } from "react-leaflet";
+
+import MainSideBar from "@/components/MainSideBar";
 
 export default function Home() {
-  // const [poly, setPoly] = useState([]);
-  // useEffect(() => {
-  //   (async () => {
-  //     const polygonCoordinates = await getCountryPolygon("Canada");
-  //     if (!polygonCoordinates) {
-  //       return;
-  //     }
-  //     setPoly(L.GeoJSON.coordsToLatLngs(polygonCoordinates, 2));
-  //   })();
-  // }, []);
+  const Map = dynamic(() => import("@/components/Map"), { ssr: false });
+
+  const [geoJson, setGeoJson] = useState<GeoJSON.GeoJSON | null>(null);
 
   useEffect(() => {
+    getCountryGeoJson("Canada").then(setGeoJson);
+
     getAllCountries().then((d) => {
       console.log(d)
     })
@@ -28,12 +26,12 @@ export default function Home() {
     getActiveCrisies().then((d) => {
       console.log(d)
     })
-  }, [])
+  }, []);
 
   return (
     <main>
-      {/* <MainSideBar /> */}
-      {/* <Map /> */}
+      <MainSideBar />
+      {geoJson && <Map geoJson={geoJson} />}
     </main>
   );
 }
